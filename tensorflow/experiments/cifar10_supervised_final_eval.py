@@ -23,8 +23,8 @@ LOG = logging.getLogger('main')
 
 def parameters():
     test_phase = True
-    for n_labeled in [4000, 2000, 1000]:
-        for data_seed in range(10):
+    for n_labeled in [4000]: #, 2000, 1000]:
+        for data_seed in range(1): # 10
             epochs = 750
             rampdown_epochs = 100
             yield {
@@ -35,7 +35,7 @@ def parameters():
                 'rampdown_length': rampdown_epochs * n_labeled / 100
             }
 
-    for data_seed in range(4):
+    for data_seed in range(0): # 4
         yield {
             'test_phase': test_phase,
             'n_labeled': 'all',

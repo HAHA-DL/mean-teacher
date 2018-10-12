@@ -7,6 +7,8 @@
 # http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
 # Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+set -e
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Downloading and unpacking CIFAR-10"
