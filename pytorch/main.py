@@ -196,7 +196,7 @@ def update_ema_variables(model, ema_model, alpha, global_step):
 def train(train_loader, model, ema_model, optimizer, epoch, log):
     global global_step
 
-    class_criterion = nn.CrossEntropyLoss(size_average=False, ignore_index=NO_LABEL).cuda()
+    class_criterion = nn.CrossEntropyLoss(reduction='sum', ignore_index=NO_LABEL).cuda()
     if args.consistency_type == 'mse':
         consistency_criterion = losses.softmax_mse_loss
     elif args.consistency_type == 'kl':
@@ -222,7 +222,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
         input_var = torch.autograd.Variable(input)
         with torch.no_grad():
             ema_input_var = torch.autograd.Variable(ema_input)
-        target_var = torch.autograd.Variable(target.cuda(async=True))
+        target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
         minibatch_size = len(target_var)
         labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum().item()
@@ -313,7 +313,7 @@ def train(train_loader, model, ema_model, optimizer, epoch, log):
 
 
 def validate(eval_loader, model, log, global_step, epoch):
-    class_criterion = nn.CrossEntropyLoss(size_average=False, ignore_index=NO_LABEL).cuda()
+    class_criterion = nn.CrossEntropyLoss(reduction='sum', ignore_index=NO_LABEL).cuda()
     meters = AverageMeterSet()
 
     # switch to evaluate mode
@@ -325,7 +325,7 @@ def validate(eval_loader, model, log, global_step, epoch):
             meters.update('data_time', time.time() - end)
 
             input_var = torch.autograd.Variable(input)
-            target_var = torch.autograd.Variable(target.cuda(async=True))
+            target_var = torch.autograd.Variable(target.cuda(non_blocking=True))
 
             minibatch_size = len(target_var)
             labeled_minibatch_size = target_var.data.ne(NO_LABEL).sum().item()
